@@ -1,11 +1,25 @@
 ul.categories {
     list-style-type: none;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0;
+    gap: 2rem;
+}
+.profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
 }
 header.sidebar{
     background-color: rgb(88, 88, 88);
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 10rem;
 
     position: absolute;
     top: 0;
