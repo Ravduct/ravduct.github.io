@@ -1,0 +1,19 @@
+---
+import Welcome from '../components/Welcome.astro';
+import Layout from '../layouts/Layout.astro';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout title='Welcome to my page'>
+	<header class="sidebar">
+		<ul class="categories">
+			<li title="Home"><a href="/">Home</a></li>
+			<li title="About Me"><a href="/about/">About</a></li>
+			<li title="My Skills"><a href="/skills/">Skills</a></li>
+			<li title="My Projects"><a href="/projects/">Projects</a></li>
+			<li title="Contact me"><a href="/contact/">Contact</a></li>
+		</ul>
+	</header>
+</Layout>
