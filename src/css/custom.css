@@ -80,9 +80,7 @@ a {
     text-decoration: none;
     color: #6098ff;
 }
-p {
-    margin-bottom: 3rem;
-}
+
 .categories {
     list-style-type: none;
     display: flex;
@@ -102,6 +100,22 @@ p {
 }
 .job_title {
     text-align: center;
+}
+.highlight {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.highlight-card {
+    flex: 0 0 calc(50% - 0.5rem);
+    min-width: 250px;
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .categories li {
     width: 100%;
