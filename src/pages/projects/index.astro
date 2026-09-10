@@ -1,0 +1,26 @@
+---
+import Welcome from '../../components/Welcome.astro';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="My Projects">
+    <div class="projects_grid">
+        <a href="https://github.com/Ravduct/WheatOS" target="_blank" rel="noopener noreferrer" class="project_card">
+            <h3>WheatOS</h3>
+            <p>A simple x86 operating system written in C and Assembly from scratch.</p>
+        </a>
+        <a href="https://github.com/Ravduct/ravduct.github.io" target="_blank" rel="noopener noreferrer" class="project_card">
+            <h3>Portfolio Website</h3>
+            <p>My personal portfolio website built with Astro.</p>
+        </a>
+        <div class="project_card">
+            <h3>Web Shooter</h3>
+            <p style="font-style: italic; color: grey;">Still in researching stage</p>
+            <p>A spider-man web shooter that can actually shoot webs (strings or blobs)</p>
+        </div>
+        <div class="project_card" style="border: 0px; background-color: transparent;">
+            <h3>More Projects Coming Soon...</h3>
+            <p>Stay tuned for more exciting projects!</p>
+        </div>
+    </div>
+</Layout>
