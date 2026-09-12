@@ -1,0 +1,186 @@
+---
+// src/components/PlexusBackground.astro
+interface Props {
+  dotColor?: string;
+  lineColor?: string;
+  particleCount?: number;
+  connectRange?: number;
+}
+
+const {
+  dotColor = "0, 173, 181",    // RGB values (teal)
+  lineColor = "0, 173, 181",   // RGB values (teal)
+  particleCount = 50,          // Lower default for better mobile battery/performance
+  connectRange = 120,          // Smaller screen default
+} = Astro.props;
+---
+
+<canvas 
+  id="plexus-canvas" 
+  data-dot-color={dotColor}
+  data-line-color={lineColor}
+  data-count={particleCount}
+  data-range={connectRange}
+></canvas>
+
+<style>
+  #plexus-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-color: #111;
+  }
+</style>
+
+<script>
+  function initPlexus() {
+    const canvas = document.getElementById('plexus-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dotColor = canvas.dataset.dotColor || "0, 173, 181";
+    const lineColor = canvas.dataset.lineColor || "0, 173, 181";
+    const numParticles = parseInt(canvas.dataset.count || "50");
+    const connectRange = parseInt(canvas.dataset.range || "120");
+
+    // Tracks either mouse pointer OR mobile finger touch position
+    const pointer = {
+      x: null as number | null,
+      y: null as number | null
+    };
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // --- MOUSE LISTENERS (For Desktop) ---
+    window.addEventListener('mousemove', (e) => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+    });
+
+    window.addEventListener('mouseout', () => {
+      pointer.x = null;
+      pointer.y = null;
+    });
+
+    // --- TOUCH LISTENERS (For Mobile Phones & Tablets) ---
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        pointer.x = e.touches[0].clientX;
+        pointer.y = e.touches[0].clientY;
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        pointer.x = e.touches[0].clientX;
+        pointer.y = e.touches[0].clientY;
+      }
+    });
+
+    window.addEventListener('touchend', () => {
+      // Disconnect lines immediately when finger lifts off screen
+      pointer.x = null;
+      pointer.y = null;
+    });
+
+    const particles: Particle[] = [];
+
+    class Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        // Slower movements feel much better on small mobile viewport screens
+        this.vx = (Math.random() - 0.5) * 1.0;
+        this.vy = (Math.random() - 0.5) * 1.0;
+        this.radius = 2.0; 
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${dotColor}, 0.8)`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < numParticles; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      // Connect dots to other dots
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectRange) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(${lineColor}, ${1 - distance / connectRange})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+
+        // Connect dots to touch point (or mouse cursor)
+        if (pointer.x !== null && pointer.y !== null) {
+          const pdx = particles[i].x - pointer.x;
+          const pdy = particles[i].y - pointer.y;
+          const pDistance = Math.sqrt(pdx * pdx + pdy * pdy);
+
+          if (pDistance < connectRange) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, pointer.x); // Fixed connection coordinates
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(pointer.x, pointer.y);
+            ctx.strokeStyle = `rgba(${lineColor}, ${(1 - pDistance / connectRange) * 1.5})`; 
+            ctx.lineWidth = 1.0; 
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  initPlexus();
+  document.addEventListener('astro:after-swap', initPlexus);
+</script>
