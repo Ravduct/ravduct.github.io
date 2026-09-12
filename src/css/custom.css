@@ -19,7 +19,6 @@ body {
     object-fit: cover;
 }
 main {
-    
     width: auto;
     overflow-y: auto;
     flex-shrink: 0;
