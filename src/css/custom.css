@@ -35,7 +35,7 @@ main {
     align-items: center;
     padding: 2.5rem 1rem;
 
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
     position: relative;
     
