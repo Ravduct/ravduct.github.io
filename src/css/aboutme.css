@@ -1,0 +1,4 @@
+.categories li a[href="/"]:where(:any-link),
+.categories li a[href*="about"]:where(:any-link) {
+    background-color: #3b6fff;
+}

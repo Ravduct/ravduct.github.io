@@ -1,0 +1,3 @@
+.categories li a[href*="skills"]:where(:any-link) {
+    background-color: #3b6fff;
+}
